@@ -2,13 +2,19 @@
 
 const  navlinks = [
     {
-        title: "Home",
-        path: "/",
+        id: 1,
+        title: "Categories",
+        path: "/categories",
     },
     {
-        title: "About",
-        path: "/about",
+        id: 2,
+        title: "Subjects",
+        path: "/subjects",
     },
+    // {
+    //     title: "About",
+    //     path: "/about",
+    // },
 ]
 
 export default navlinks;

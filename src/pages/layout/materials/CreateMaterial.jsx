@@ -4,6 +4,7 @@ import {
     useGetAllSubjectsQuery,
 } from "../../../services/aspiAPI";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const CreateMaterial = () => {
     const { id: StdId } = useSelector((state) => state.auth);
@@ -12,6 +13,7 @@ const CreateMaterial = () => {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm({
         defaultValues: {
             MaterialId: 55,
@@ -25,8 +27,10 @@ const CreateMaterial = () => {
 
     // ---------------------------------------------------------
     // ======================== APIS ========================
-    const [handleFormSubmit, { isLoading, isSuccess, data, isError, error }] =
-        useAddMaterialMutation();
+    const [
+        handleFormSubmit,
+        { isLoading, isSuccess, data, isError, error, reset: resetSubmit },
+    ] = useAddMaterialMutation();
 
     const {
         data: subjects,
@@ -40,13 +44,6 @@ const CreateMaterial = () => {
 
     // ---------------------------------------------------------
     // ======================== Handlers ========================
-
-    const logFormData = (formData) => {
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ", " + pair[1]);
-        }
-    };
-
     const handleOnSubmit = (data) => {
         const fd = new FormData();
         fd.append("File", data.File[0]);
@@ -55,13 +52,20 @@ const CreateMaterial = () => {
         fd.append("SubjectId", data.SubjectId);
         fd.append("MaterialId", data.MaterialId);
         fd.append("FileFormat", data.FileFormat);
-        
         handleFormSubmit(fd);
     };
     // ======================== End Handlers ========================
     // *********************************************************
-    if (isError) console.log(error);
-    if (isSuccess) console.log(data);
+    if (isSuccess) {
+        reset();
+        resetSubmit();
+        toast.success("Material added successfully");
+    }
+    if (isError) {
+        toast.error(error.data);
+        resetSubmit();
+        reset();
+    }
     return (
         <div className="max-w-screen-xl px-4 py-16 mx-auto sm:px-6 lg:px-8">
             <div className="max-w-lg mx-auto">
@@ -92,7 +96,11 @@ const CreateMaterial = () => {
                                         {...register("Description", {
                                             required: "Description is required",
                                             disabled: isLoading,
-                                            minLength: 5,
+                                            minLength: {
+                                                value: 5,
+                                                message:
+                                                    "Description must be at least 5 characters",
+                                            },
                                         })}
                                     />
                                     <p className="mt-1 text-xs text-red-500">

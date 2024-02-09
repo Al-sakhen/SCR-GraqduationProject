@@ -52,7 +52,7 @@ const Subjects = () => {
             deleteSubject(id);
         }
     };
-
+    console.log({ data });
     if (isSuccess) {
         return (
             <>
@@ -82,7 +82,7 @@ const Subjects = () => {
                         <tbody>
                             {data.map((subject, index) => (
                                 <tr key={subject.subjectId}>
-                                    <th>{index + 1}</th>
+                                    <th>{subject.subjectId}</th>
                                     <td>{subject.subjectName}</td>
                                     <td className="space-x-2">
                                         <NavLink

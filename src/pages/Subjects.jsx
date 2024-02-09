@@ -6,7 +6,9 @@ const HomeSubjects = () => {
 
     const { isError, isFetching, isLoading, isSuccess, data, refetch } =
         useGetSubjectsByCategoryIdQuery(id);
-
+    const goBack = () => {
+        window.history.back();
+    };
     if (isLoading)
         return (
             <div className="flex items-center justify-center h-screen">
@@ -34,7 +36,7 @@ const HomeSubjects = () => {
         <>
             <div className="relative pt-4 pb-10">
                 <NavLink
-                    to="/"
+                    onClick={goBack}
                     className="absolute top-0 left-0 text-3xl font-bold text-center hover:text-cyan-900"
                 >
                     🔙

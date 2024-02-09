@@ -1,39 +1,53 @@
 import { toast } from "react-toastify";
 import {
-    useDeleteCategoryMutation,
-    useGetAllCategoriesQuery,
+    useDeleteMaterialMutation,
+    useGetAllMaterialsQuery,
 } from "../../../../services/aspiAPI";
-import CreateCategoryDialog from "./create";
 import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
 
-const Categories = () => {
+const AdMaterials = () => {
     // ========Fetching data =========
     const { isError, isFetching, isLoading, isSuccess, data, refetch } =
-        useGetAllCategoriesQuery();
+        useGetAllMaterialsQuery();
 
-    const [
-        deleteCategory,
-        {
-            isLoading: isDeleting,
-            isSuccess: isDeleteSuccess,
-            error: deleteError,
-            isError: isDeleteError,
-            data: deleteData,
-            reset,
-        },
-    ] = useDeleteCategoryMutation();
-
-    
     useEffect(() => {
         refetch();
     }, []);
 
-    if (isDeleteError) {
-        toast.success(deleteError.data);
-        refetch();
-        reset();
+    const [
+        deleteMaterial,
+        {
+            isLoading: isLoadingDelete,
+            isSuccess: isSuccessDelete,
+            isError: isErrorDelete,
+            error: errorDelete,
+            reset: resetDelete,
+            data: dataDelete,
+        },
+    ] = useDeleteMaterialMutation();
+
+    console.log({
+        isLoadingDelete,
+        isSuccessDelete,
+        isErrorDelete,
+        errorDelete,
+        dataDelete,
+    });
+    const handleDelete = (id) => {
+        console.log("delete", id);
+        deleteMaterial(id);
+    };
+    if (isErrorDelete) {
+        if (errorDelete.data == "Material deleted successfully") {
+            toast.success(errorDelete.data);
+            resetDelete();
+            refetch();
+        } else {
+            toast.error("Error deleting material");
+        }
     }
+
     if (isLoading)
         return (
             <div className="flex items-center justify-center h-screen">
@@ -44,29 +58,13 @@ const Categories = () => {
     if (isError) {
         return <div>Error...</div>;
     }
-
-    const handleDelete = (id) => {
-        if (window.confirm("Are you sure you want to delete this category?")) {
-            deleteCategory(id);
-        }
-    };
-
     console.log({ data });
+
     if (isSuccess) {
         return (
             <>
                 <div className="flex items-center justify-between pb-4">
-                    <h2 className="text-3xl">Categories Table</h2>
-                    {/* Open the modal using document.getElementById('ID').showModal() method */}
-                    <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() =>
-                            document.getElementById("add_category").showModal()
-                        }
-                    >
-                        Add Category
-                    </button>
-                    <CreateCategoryDialog refetch={refetch} />
+                    <h2 className="text-3xl">Materials Table</h2>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="table">
@@ -74,28 +72,37 @@ const Categories = () => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
+                                <th>Description</th>
+                                <th>File format</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((category, index) => (
-                                <tr key={category.catId}>
-                                    <th>{category.catId}</th>
-                                    <td>{category.catName}</td>
+                            {data.map((material, index) => (
+                                <tr key={index + 1}>
+                                    <th>{material.materialId}</th>
+                                    <td>{material.description}</td>
+                                    <td>{material.fileFormat}</td>
                                     <td className="space-x-2">
                                         <NavLink
-                                            to={`/admin/categories/edit/${category.catId}`}
-                                            className="btn btn-sm btn-warning"
+                                            to={`/admin/materials/${material.materialId}/reports`}
+                                            className="btn btn-sm btn-info"
                                         >
-                                            Edit
+                                            Reports
+                                        </NavLink>
+                                        <NavLink
+                                            to={`/admin/materials/${material.materialId}/comments`}
+                                            className="btn btn-sm btn-success"
+                                        >
+                                            Comments
                                         </NavLink>
                                         <button
-                                            className="btn btn-sm btn-accent"
                                             onClick={() =>
-                                                handleDelete(category.catId)
+                                                handleDelete(
+                                                    material.materialId
+                                                )
                                             }
-                                            disabled={isDeleting}
+                                            className="btn btn-sm btn-error"
                                         >
                                             Delete
                                         </button>
@@ -121,4 +128,4 @@ const Categories = () => {
     }
 };
 
-export default Categories;
+export default AdMaterials;

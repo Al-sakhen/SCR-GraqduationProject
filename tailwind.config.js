@@ -41,6 +41,7 @@ export default {
                     error: "#ff5724",
                 },
             },
+            'night'
         ],
     },
 };

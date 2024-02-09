@@ -9,6 +9,7 @@ const Register = () => {
     const navigate = useNavigate();
 
     const {
+        watch,
         register,
         handleSubmit: handleFormSubmit,
         formState: { errors },
@@ -16,12 +17,13 @@ const Register = () => {
         defaultValues: {
             stdUserName: "",
             password: "",
-            stdName: "anyData",
+            passwordConfirmation: "",
+            stdName: "",
             esuInst: "",
             roles: ["Reader"],
         },
     });
-
+    console.log({ errors });
     const [
         handleSubmit,
         { isError, error, isSuccess, data, isLoading, reset },
@@ -71,6 +73,32 @@ const Register = () => {
                                 <label className="w-full form-control">
                                     <div className="label">
                                         <span className="label-text">
+                                            Name
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </span>
+                                    </div>
+                                    <input
+                                        type={"text"}
+                                        placeholder={"Enter name"}
+                                        className="w-full input input-bordered"
+                                        disabled={isLoading}
+                                        {...register("stdName", {
+                                            required: "Name is required",
+                                            minLength: 5,
+                                        })}
+                                    />
+                                </label>
+                                <p className="mt-1 text-xs text-red-500">
+                                    {errors?.stdName?.message}
+                                </p>
+                            </div>
+
+                            <div>
+                                <label className="w-full form-control">
+                                    <div className="label">
+                                        <span className="label-text">
                                             Username
                                             <span className="text-red-500">
                                                 *
@@ -94,7 +122,7 @@ const Register = () => {
                             </div>
 
                             <div>
-                                <label className="w-full form-control">
+                                <label className="w-full form-control" >
                                     <div className="label">
                                         <span className="label-text">
                                             Password
@@ -123,10 +151,41 @@ const Register = () => {
                                 <label className="w-full form-control">
                                     <div className="label">
                                         <span className="label-text">
-                                            Education institution
+                                            Password Confirmation
                                             <span className="text-red-500">
                                                 *
                                             </span>
+                                        </span>
+                                    </div>
+                                    <input
+                                        type={"password"}
+                                        placeholder={"Enter password"}
+                                        className="w-full input input-bordered"
+                                        disabled={isLoading}
+                                        {...register("passwordConfirmation", {
+                                            required: {
+                                                value: true,
+                                                message:
+                                                    "Password confiramtion is required",
+                                            },
+                                            validate: (val) => {
+                                                if (watch("password") != val) {
+                                                    return "Your passwords doesn't match";
+                                                }
+                                            },
+                                        })}
+                                    />
+                                </label>
+                                <p className="mt-1 text-xs text-red-500">
+                                    {errors?.passwordConfirmation?.message}
+                                </p>
+                            </div>
+
+                            <div>
+                                <label className="w-full form-control">
+                                    <div className="label">
+                                        <span className="label-text">
+                                            Education institution
                                         </span>
                                     </div>
                                     <input
@@ -136,11 +195,7 @@ const Register = () => {
                                         }
                                         className="w-full input input-bordered"
                                         disabled={isLoading}
-                                        {...register("esuInst", {
-                                            required:
-                                                "Education institution is required",
-                                            minLength: 5,
-                                        })}
+                                        {...register("esuInst")}
                                     />
                                 </label>
                                 <p className="mt-1 text-xs text-red-500">

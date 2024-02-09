@@ -1,16 +1,15 @@
-import { NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import {
     useAddMaterialMutation,
-    useGetMaterialsBySubjectIdQuery,
-    useGetSubjectsByCategoryIdQuery,
+    useGetAllSubjectsQuery,
+    useGetMaterialsByStdIdQuery,
 } from "../services/aspiAPI";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 
-const Materials = () => {
-    const { id: subjectId } = useParams();
+const STDMaterials = () => {
     const { id: StdId } = useSelector((state) => state.auth);
 
     const {
@@ -25,7 +24,7 @@ const Materials = () => {
             Description: "",
             StdId: StdId,
             File: "",
-            SubjectId: subjectId,
+            SubjectId: "",
         },
     });
 
@@ -44,7 +43,15 @@ const Materials = () => {
     ] = useAddMaterialMutation();
 
     const { isError, isFetching, isLoading, error, isSuccess, data, refetch } =
-        useGetMaterialsBySubjectIdQuery(subjectId);
+        useGetMaterialsByStdIdQuery(StdId);
+
+    const {
+        data: subjects,
+        isLoading: isLoadingSubjects,
+        isSuccess: isSuccessSubjects,
+        isError: isErrorSubjects,
+        error: errorSubjects,
+    } = useGetAllSubjectsQuery();
     // ======================== End APIS ========================
     // *********************************************************
 
@@ -63,11 +70,9 @@ const Materials = () => {
 
     // ======================== End Handlers ========================
     // *********************************************************
-
     useEffect(() => {
         refetch();
-    }, [subjectId]);
-
+    }, []);
     if (isSuccessAdd) {
         toast.success("Material added successfully");
         reset();
@@ -176,6 +181,42 @@ const Materials = () => {
                                         />
                                     </label>
                                 </div>
+                                <div>
+                                    <label className="w-full form-control">
+                                        <div className="label">
+                                            <span className="label-text">
+                                                Select subject
+                                                <span className="text-red-500">
+                                                    *
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <select
+                                            className="w-full select select-bordered"
+                                            {...register("SubjectId", {
+                                                required: true,
+                                                disabled:
+                                                    isLoading ||
+                                                    isLoadingSubjects,
+                                            })}
+                                        >
+                                            <option disabled>
+                                                please select subject..
+                                            </option>
+                                            {subjects &&
+                                                subjects.map((subject) => (
+                                                    <option
+                                                        key={subject.subjectId}
+                                                        value={
+                                                            subject.subjectId
+                                                        }
+                                                    >
+                                                        {subject.subjectName}
+                                                    </option>
+                                                ))}
+                                        </select>
+                                    </label>
+                                </div>
                                 <button
                                     type="submit"
                                     className={
@@ -209,6 +250,12 @@ const Materials = () => {
                                 <h2 className="justify-center card-title ">
                                     {material.description}
                                 </h2>
+                                <Link
+                                    className="absolute top-0 right-0 btn-secondary btn btn-sm"
+                                    to={`/material/${material.materialId}/edit`}
+                                >
+                                    Edit
+                                </Link>
                                 <span className="absolute bottom-0 right-0 p-1 text-white bg-red-500 rounded-br-md rounded-tl-md">
                                     {material.fileFormat}
                                 </span>
@@ -225,4 +272,4 @@ const Materials = () => {
     );
 };
 
-export default Materials;
+export default STDMaterials;

@@ -1,48 +1,40 @@
 import React, { useState } from "react";
-import { useAddSubjectMutation } from "../../../../services/aspiAPI";
+import { useAddCategoryMutation } from "../../../../services/aspiAPI";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const CreateSubjectDialog = ({ refetch }) => {
+const CreateCategoryDialog = ({ refetch }) => {
     const navigate = useNavigate();
 
-    const [subject, setSubject] = useState({
-        subjectName: "",
+    const [category, setCategory] = useState({
+        catName: "",
     });
 
-    const [cities, setSelectedCities] = useState([
-        { name: "New York", code: "NY" },
-        { name: "Rome", code: "RM" },
-        { name: "London", code: "LDN" },
-        { name: "Istanbul", code: "IST" },
-        { name: "Paris", code: "PRS" },
-    ]);
-
     const [handleSubmit, { isLoading, isSuccess, reset }] =
-        useAddSubjectMutation();
+        useAddCategoryMutation();
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
-        if (subject.subjectName === "") {
-            toast.error("Subject name is required");
+        if (category.catName === "") {
+            toast.error("Category name is required");
         } else {
-            handleSubmit(subject);
+            handleSubmit(category);
         }
     };
 
     if (isSuccess) {
-        toast.success("Subject added successfully");
-        subject.subjectName = "";
-        document.getElementById("add_subject").close();
-        navigate("/admin/subjects");
+        toast.success("Category added successfully");
+        category.catName = "";
+        document.getElementById("add_category").close();
+        navigate("/admin/categories");
         reset();
         refetch();
     }
 
     return (
-        <dialog id="add_subject" className="modal">
+        <dialog id="add_category" className="modal">
             <div className="modal-box">
-                <h3 className="text-lg font-bold">Add new subject</h3>
+                <h3 className="text-lg font-bold">Add new category</h3>
                 <div className="py-4">
                     <form
                         onSubmit={handleOnSubmit}
@@ -53,27 +45,24 @@ const CreateSubjectDialog = ({ refetch }) => {
                                 <label className="w-full form-control">
                                     <div className="label">
                                         <span className="label-text">
-                                            subject name
+                                            Category name
                                         </span>
                                     </div>
-                    
                                     <input
                                         required
                                         type="text"
-                                        name="subjectName"
-                                        placeholder="Enter subject name"
+                                        name="catName"
+                                        placeholder="Enter category name"
                                         className="w-full input input-bordered"
-                                        value={subject.subjectName}
+                                        value={category.catName}
                                         disabled={isLoading}
                                         onChange={(e) =>
-                                            setSubject({
-                                                ...subject,
-                                                subjectName: e.target.value,
+                                            setCategory({
+                                                ...category,
+                                                catName: e.target.value,
                                             })
                                         }
                                     />
-
-                                    
                                 </label>
                             </div>
 
@@ -99,4 +88,4 @@ const CreateSubjectDialog = ({ refetch }) => {
     );
 };
 
-export default CreateSubjectDialog;
+export default CreateCategoryDialog;

@@ -9,7 +9,6 @@ export const aspAPI = createApi({
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
             }
-            headers.set("Content-Type", "application/json");
             return headers;
         },
     }),
@@ -43,9 +42,11 @@ export const aspAPI = createApi({
                 body,
             }),
         }),
+
         getAllCategories: builder.query({
             query: () => "Category/GetAllCategories",
         }),
+
         deleteCategory: builder.mutation({
             query: (id) => ({
                 url: `Category/DeleteCategory?CatId=${id}`,
@@ -64,8 +65,13 @@ export const aspAPI = createApi({
         }),
 
         searchCategoryByName: builder.query({
-            query: (searchKeyword) =>
-                `Category/SearchCategoryByName?searchKeyword=${searchKeyword}`,
+            query: (searchKeyword) => {
+                let baseQuery = "Category/SearchCategoryByName";
+                if (searchKeyword) {
+                    baseQuery += `?searchKeyword=${searchKeyword}`;
+                }
+                return baseQuery;
+            },
         }),
         // ==================== End Categories ====================
         // *********************************************************
@@ -80,7 +86,7 @@ export const aspAPI = createApi({
             }),
         }),
         getAllSubjects: builder.query({
-            query: () => "Subject/GetAllSubjects",
+            query: (body) => `Subject/GetAllSubjects`,
         }),
         deleteSubject: builder.mutation({
             query: (id) => ({
@@ -104,29 +110,44 @@ export const aspAPI = createApi({
         getSubjectsByCategoryId: builder.query({
             query: (id) => `Subject/GetSubjectsByCategoryId?categoryId=${id}`,
         }),
+        searchSubjectByName: builder.query({
+            query: (searchKeyword) => {
+                let baseQuery = "Subject/SearchSubjectByName";
+                if (searchKeyword) {
+                    baseQuery += `?searchKeyword=${searchKeyword}`;
+                }
+                return baseQuery;
+            },
+        }),
         // ==================== End Subjects ====================
         // *********************************************************
 
         // ---------------------------------------------------------
         // ==================== Materials ====================
         addMaterial: builder.mutation({
-            query: (body) => (
-                console.log({ body }),
-                {
-                    url: "Files/UploadFile",
-                    method: "POST",
-                    body,
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            ),
+            query: (body) => ({
+                url: "Files/UploadFile",
+                method: "POST",
+                body,
+                prepareHeaders: (headers) => {
+                    headers.set("Content-Type", "multipart/form-data");
+                    return headers;
+                },
+            }),
         }),
-
         downloadMaterial: builder.query({
-            query: (id) => `Files/DownloadFile?materialId=${id}`,
+            query: (id) => ({
+                url: `Files/DownloadFile?materialId=${id}`,
+                responseHandler: async (response) => {
+                    const contentType = response.headers.get("content-type");
+                    const contentDisposition = response.headers.get(
+                        "content-disposition"
+                    );
+                    const blob = await response.blob();
+                    return { blob, contentType, contentDisposition };
+                },
+            }),
         }),
-
         getAllMaterials: builder.query({
             query: () => "Material/GetAllMaterials",
         }),
@@ -139,9 +160,30 @@ export const aspAPI = createApi({
             query: (id) => `Subject/GetMaterialBySubjectId?subjectId=${id}`,
         }),
 
-        // /api/Comment/GetCommentByMaterialId
         getCommentsByMaterialId: builder.query({
             query: (id) => `Comment/GetCommentByMaterialId?materialId=${id}`,
+        }),
+
+        getMaterialsByStdId: builder.query({
+            query: (id) => `Material/GetMaterialsByStdId?stdId=${id}`,
+        }),
+
+        updateMaterialDescription: builder.mutation({
+            query: (body) => ({
+                url: "Material/UpdateMaterialDescription",
+                method: "PUT",
+                body,
+            }),
+        }),
+
+        deleteMaterial: builder.mutation({
+            query: (id) => (
+                console.log(id),
+                {
+                    url: `Material/DeleteMaterial?MatId=${id}`,
+                    method: "DELETE",
+                }
+            ),
         }),
         // ==================== End Materials ====================
         // *********************************************************
@@ -164,6 +206,100 @@ export const aspAPI = createApi({
                     method: "DELETE",
                 }
             ),
+        }),
+        // ==================== End Comments ====================
+        // *********************************************************
+
+        // ---------------------------------------------------------
+        // ==================== Reports ====================
+        addReport: builder.mutation({
+            query: (body) => (
+                console.log({ body }),
+                {
+                    url: "Report/AddReport",
+                    method: "POST",
+                    body,
+                }
+            ),
+        }),
+
+        getReportsByMaterialId: builder.query({
+            query: (id) => `Report/GetReportsByMaterialId?materialId=${id}`,
+        }),
+
+        deleteReport: builder.mutation({
+            query: (body) => ({
+                url: `Report/DeleteReport?StdId=${body.StdId}&MatId=${body.MatId}`,
+                method: "DELETE",
+            }),
+        }),
+        // ==================== End Reports ====================
+        // *********************************************************
+
+        // ---------------------------------------------------------
+        // ==================== SubjectCategory ====================
+        addSubjectCategory: builder.mutation({
+            query: (body) => ({
+                url: "SubCat/AddSubCat",
+                method: "POST",
+                body,
+            }),
+        }),
+        // ==================== End SubjectCategory ====================
+        // *********************************************************
+
+        // ---------------------------------------------------------
+        // ==================== Student Info ====================
+        getStudentInfo: builder.query({
+            query: (id) => `StudentsInfo/GetStudentInfo?studentId=${id}`,
+        }),
+
+        updateStudentInfo: builder.mutation({
+            query: (body) => ({
+                url: "StudentsInfo/UpdateStudentInfo",
+                method: "PUT",
+                body,
+            }),
+        }),
+        // ==================== End Student Info ====================
+        // *********************************************************
+
+        // ---------------------------------------------------------
+        // ==================== Bookmark ====================
+        addBookmark: builder.mutation({
+            query: (body) => ({
+                url: "Bookmark/AddBookmark",
+                method: "POST",
+                body,
+            }),
+        }),
+        getBookmarksByStdId: builder.query({
+            query: (id) => `Bookmark/GetBookMarkById?stdId=${id}`,
+        }),
+
+        // /api/Bookmark/DeleteBookmark
+        removeBookmark: builder.mutation({
+            query: (body) => ({
+                url: `Bookmark/DeleteBookmark?StdId=${body.StdId}&MatId=${body.MatId}`,
+                method: "DELETE",
+            }),
+        }),
+        // ==================== End Bookmark ====================
+        // *********************************************************
+
+        // ---------------------------------------------------------
+        // ==================== Rate ====================
+        // /api/Rate/AddRate
+        addRate: builder.mutation({
+            query: (body) => ({
+                url: "Rate/AddRate",
+                method: "POST",
+                body,
+            }),
+        }),
+        // /api/Rate/GetAverageRatesByMaterialId
+        getAverageRatesByMaterialId: builder.query({
+            query: (id) => `Rate/GetAverageRatesByMaterialId?materialId=${id}`,
         }),
     }),
 });
@@ -191,6 +327,19 @@ export const {
     useGetCommentsByMaterialIdQuery,
     useAddCommentMutation,
     useDeleteCommentMutation,
+    useAddReportMutation,
+    useGetReportsByMaterialIdQuery,
+    useDeleteReportMutation,
+    useAddSubjectCategoryMutation,
+    useSearchSubjectByNameQuery,
+    useGetStudentInfoQuery,
+    useUpdateStudentInfoMutation,
+    useAddBookmarkMutation,
+    useGetMaterialsByStdIdQuery,
+    useUpdateMaterialDescriptionMutation,
+    useGetBookmarksByStdIdQuery,
+    useRemoveBookmarkMutation,
+    useAddRateMutation,
+    useGetAverageRatesByMaterialIdQuery,
+    useDeleteMaterialMutation,
 } = aspAPI;
-
-// anything starts with "use" called a hook

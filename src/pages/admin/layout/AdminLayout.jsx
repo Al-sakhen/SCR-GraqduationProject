@@ -59,6 +59,13 @@ const AdminLayout = () => {
                         <li>
                             <NavLink to={"/admin/subjects"}>Subjects</NavLink>
                         </li>
+                        <li>
+                            <NavLink to={"/admin/category-subjects"}>Category + Subjects</NavLink>
+                        </li>
+                        <li>
+                            <NavLink to={"/admin/materials"}>Materials</NavLink>
+                        </li>
+
                     </ul>
                 </div>
             </div>
