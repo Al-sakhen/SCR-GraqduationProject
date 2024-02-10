@@ -157,7 +157,8 @@ export const aspAPI = createApi({
         }),
 
         getMaterialsBySubjectId: builder.query({
-            query: (id) => `Subject/GetMaterialBySubjectId?subjectId=${id}`,
+            query: ({ subjectId, filterBy }) =>
+                `Subject/GetMaterialBySubjectId?subjectId=${subjectId}&filterByFileFormat=${filterBy}`,
         }),
 
         getCommentsByMaterialId: builder.query({
@@ -177,13 +178,10 @@ export const aspAPI = createApi({
         }),
 
         deleteMaterial: builder.mutation({
-            query: (id) => (
-                console.log(id),
-                {
-                    url: `Material/DeleteMaterial?MatId=${id}`,
-                    method: "DELETE",
-                }
-            ),
+            query: (id) => ({
+                url: `Material/DeleteMaterial?MatId=${id}`,
+                method: "DELETE",
+            }),
         }),
         // ==================== End Materials ====================
         // *********************************************************
@@ -199,13 +197,10 @@ export const aspAPI = createApi({
         }),
 
         deleteComment: builder.mutation({
-            query: (body) => (
-                console.log({ body }),
-                {
-                    url: `Comment/DeleteComment?StdId=${body.StdId}&MatId=${body.MatId}`,
-                    method: "DELETE",
-                }
-            ),
+            query: (body) => ({
+                url: `Comment/DeleteComment?StdId=${body.StdId}&MatId=${body.MatId}`,
+                method: "DELETE",
+            }),
         }),
         // ==================== End Comments ====================
         // *********************************************************
@@ -213,14 +208,11 @@ export const aspAPI = createApi({
         // ---------------------------------------------------------
         // ==================== Reports ====================
         addReport: builder.mutation({
-            query: (body) => (
-                console.log({ body }),
-                {
-                    url: "Report/AddReport",
-                    method: "POST",
-                    body,
-                }
-            ),
+            query: (body) => ({
+                url: "Report/AddReport",
+                method: "POST",
+                body,
+            }),
         }),
 
         getReportsByMaterialId: builder.query({

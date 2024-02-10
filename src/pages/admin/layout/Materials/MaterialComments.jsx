@@ -52,7 +52,6 @@ const MaterialComments = () => {
         refetch();
     }
 
-    console.log({ data });
     if (isSuccess) {
         return (
             <>

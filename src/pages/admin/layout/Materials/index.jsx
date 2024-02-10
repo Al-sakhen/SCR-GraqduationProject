@@ -27,15 +27,8 @@ const AdMaterials = () => {
         },
     ] = useDeleteMaterialMutation();
 
-    console.log({
-        isLoadingDelete,
-        isSuccessDelete,
-        isErrorDelete,
-        errorDelete,
-        dataDelete,
-    });
+
     const handleDelete = (id) => {
-        console.log("delete", id);
         deleteMaterial(id);
     };
     if (isErrorDelete) {
@@ -58,7 +51,6 @@ const AdMaterials = () => {
     if (isError) {
         return <div>Error...</div>;
     }
-    console.log({ data });
 
     if (isSuccess) {
         return (

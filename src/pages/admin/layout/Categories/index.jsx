@@ -51,7 +51,6 @@ const Categories = () => {
         }
     };
 
-    console.log({ data });
     if (isSuccess) {
         return (
             <>

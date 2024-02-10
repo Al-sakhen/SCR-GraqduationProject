@@ -32,10 +32,16 @@ const HomeCategories = () => {
 
     return (
         <>
+            <div className="text-sm breadcrumbs">
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>Categories</li>
+                </ul>
+            </div>
             <div className="flex flex-col items-center justify-between gap-5 pt-4 pb-10 md:flex-row">
-                <p className="text-xl font-bold text-center">
-                    Select the category you want
-                </p>
+                <p className="text-2xl font-bold text-center">Categories</p>
                 <input
                     type="text"
                     placeholder="Search on categories..."

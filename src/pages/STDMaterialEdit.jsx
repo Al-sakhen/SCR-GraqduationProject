@@ -40,12 +40,7 @@ const STDMaterialEdit = () => {
             data: dataUpdateDescription,
         },
     ] = useUpdateMaterialDescriptionMutation();
-    console.log({
-        isSuccessUpdateDescription,
-        dataUpdateDescription,
-        isErrorUpdateDescription,
-        errorUpdateDescription,
-    });
+
     // ======================== End APIS ========================
     // *********************************************************
 

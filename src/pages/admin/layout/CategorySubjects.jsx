@@ -53,7 +53,6 @@ const CategorySubjects = () => {
         },
     ] = useAddSubjectCategoryMutation();
 
-    console.log({ isSuccessAdd, isErrorAdd, isLoadingAdd, errorAdd, dataAdd });
 
     if (isLoading)
         return (

@@ -52,7 +52,7 @@ const Subjects = () => {
             deleteSubject(id);
         }
     };
-    console.log({ data });
+    
     if (isSuccess) {
         return (
             <>

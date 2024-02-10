@@ -32,7 +32,6 @@ const Login = () => {
         e.preventDefault();
         handleSubmit(user);
     };
-    console.log({ data });
 
     if (isSuccess) {
         dispatch(login(data));

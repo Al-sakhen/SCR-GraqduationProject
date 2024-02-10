@@ -6,7 +6,7 @@ import {
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-const BookmarkItem = ({ materialId ,onRefetch }) => {
+const BookmarkItem = ({ materialId, onRefetch }) => {
     const { id: StdId } = useSelector((state) => state.auth);
     const { isError, isFetching, isLoading, error, isSuccess, data, refetch } =
         useGetMaterialByIdQuery(materialId);
@@ -28,17 +28,16 @@ const BookmarkItem = ({ materialId ,onRefetch }) => {
         };
         removeMaterial(data);
     };
-console.log(removeError)
+    
     if (isRemoveError) {
         if (removeError.data == "Bookmark deleted successfully") {
             toast.success("Bookmark deleted successfully");
             refetch();
             reset();
             onRefetch();
-        }else{
+        } else {
             toast.error(removeError.data);
         }
-        
     }
 
     if (isError || isLoading || isFetching) {

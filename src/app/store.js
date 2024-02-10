@@ -15,7 +15,6 @@ export const store = configureStore({
     reducer: {
         // auth: authSlice,
         auth: persistedAuthReducer,
-        // categories : categoriesSlice,
 
         // apis
         aspAPI: aspAPI.reducer,

@@ -23,7 +23,6 @@ const Register = () => {
             roles: ["Reader"],
         },
     });
-    console.log({ errors });
     const [
         handleSubmit,
         { isError, error, isSuccess, data, isLoading, reset },
@@ -32,11 +31,9 @@ const Register = () => {
     const handleOnSubmit = (data) => {
         handleSubmit(data);
     };
-    console.log({ isError, error, isSuccess, data, isLoading, reset });
 
     if (isError) {
         if (!error.data.errors && error.data) {
-            console.log(error.data);
             if (error.data == "succecfull registered, please login") {
                 toast.success(error.data);
                 navigate("/login");
@@ -86,7 +83,11 @@ const Register = () => {
                                         disabled={isLoading}
                                         {...register("stdName", {
                                             required: "Name is required",
-                                            minLength: 5,
+                                            minLength: {
+                                                value: 3,
+                                                message:
+                                                    "Name should be at least 3 characters",
+                                            },
                                         })}
                                     />
                                 </label>
@@ -112,7 +113,11 @@ const Register = () => {
                                         disabled={isLoading}
                                         {...register("stdUserName", {
                                             required: "Username is required",
-                                            minLength: 5,
+                                            minLength: {
+                                                value: 3,
+                                                message:
+                                                    "Username should be at least 3 characters",
+                                            },
                                         })}
                                     />
                                 </label>
@@ -122,7 +127,7 @@ const Register = () => {
                             </div>
 
                             <div>
-                                <label className="w-full form-control" >
+                                <label className="w-full form-control">
                                     <div className="label">
                                         <span className="label-text">
                                             Password
@@ -138,7 +143,11 @@ const Register = () => {
                                         disabled={isLoading}
                                         {...register("password", {
                                             required: "Password is required",
-                                            minLength: 5,
+                                            minLength: {
+                                                value: 8,
+                                                message:
+                                                    "Password should be at least 8 characters",
+                                            },
                                         })}
                                     />
                                 </label>

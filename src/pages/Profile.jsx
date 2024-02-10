@@ -28,7 +28,6 @@ const Profile = () => {
     ] = useUpdateStudentInfoMutation();
 
     const handleOnSubmit = (data) => {
-        console.log(data);
         handleSubmit(data);
     };
 

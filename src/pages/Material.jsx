@@ -1,4 +1,4 @@
-import { NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import {
     useAddBookmarkMutation,
     useAddCommentMutation,
@@ -64,6 +64,8 @@ const Material = () => {
     // ======================== APIS ========================
     const { isError, isFetching, isLoading, isSuccess, data, refetch } =
         useGetMaterialByIdQuery(MaterialId);
+
+    console.log({ data });
 
     const {
         isError: isErrorComments,
@@ -264,6 +266,24 @@ const Material = () => {
     }
     return (
         <>
+            {isSuccess && (
+                <div className="text-sm breadcrumbs">
+                    <ul>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/subjects">Subjects</Link>
+                        </li>
+                        <li>
+                            <Link to={`/subject/${data.subjectId}/materials`}>
+                                Materials
+                            </Link>
+                        </li>
+                        <li>{data.description}</li>
+                    </ul>
+                </div>
+            )}
             <div className="relative pt-4 pb-10">
                 <div className="absolute top-0 right-0">
                     <DownloadBTN

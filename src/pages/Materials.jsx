@@ -1,17 +1,19 @@
-import { NavLink, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import {
     useAddMaterialMutation,
     useGetMaterialsBySubjectIdQuery,
-    useGetSubjectsByCategoryIdQuery,
+    useGetSubjectByIdQuery,
 } from "../services/aspiAPI";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const Materials = () => {
     const { id: subjectId } = useParams();
     const { id: StdId } = useSelector((state) => state.auth);
+
+    const [option, setOption] = useState("");
 
     const {
         register,
@@ -44,7 +46,10 @@ const Materials = () => {
     ] = useAddMaterialMutation();
 
     const { isError, isFetching, isLoading, error, isSuccess, data, refetch } =
-        useGetMaterialsBySubjectIdQuery(subjectId);
+        useGetMaterialsBySubjectIdQuery({
+            subjectId,
+            filterBy: option,
+        });
     // ======================== End APIS ========================
     // *********************************************************
 
@@ -61,12 +66,21 @@ const Materials = () => {
         handleFormSubmit(fd);
     };
 
+    const handleOptionChange = (e) => {
+        setOption(e.target.value);
+    };
+
+    const { isSuccess: isSuccessSubject, data: dataSubject } =
+        useGetSubjectByIdQuery(subjectId);
+
+    console.log({ dataSubject });
+
     // ======================== End Handlers ========================
     // *********************************************************
 
     useEffect(() => {
         refetch();
-    }, [subjectId]);
+    }, [subjectId, option]);
 
     if (isSuccessAdd) {
         toast.success("Material added successfully");
@@ -100,17 +114,56 @@ const Materials = () => {
 
     return (
         <>
-            <div className="flex justify-between pt-4 pb-10">
-                <p className="text-xl font-bold ">Materials</p>
-                {/* Open the modal using document.getElementById('ID').showModal() method */}
-                <button
-                    className="btn btn-md btn-primary"
-                    onClick={() =>
-                        document.getElementById("addMaterial").showModal()
-                    }
-                >
-                    Add new material
-                </button>
+            {isSuccessSubject && (
+                <div className="text-sm breadcrumbs">
+                    <ul>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/subjects">Subjects</Link>
+                        </li>
+                        <li>
+                            <Link to={`/subject/${subjectId}/materials`}>
+                                {dataSubject.subjectName}
+                            </Link>
+                        </li>
+                        <li>Materials</li>
+                    </ul>
+                </div>
+            )}
+            <div className="flex items-center justify-between pt-4 pb-10">
+                <p className="text-2xl font-bold ">Materials</p>
+
+                <div className="flex items-center justify-between gap-4">
+                    <select
+                        className="w-full max-w-xs select select-bordered"
+                        onChange={handleOptionChange}
+                    >
+                        <option value={""}>All Materials</option>
+                        <option value={".pdf"}>Books</option>
+                        <option value={".mp4"}>Lectures</option>
+                        <option value={".docx"}>Slides</option>
+                        <option value={".png"}>Past Exams</option>
+                    </select>
+                    {/* Open the modal using document.getElementById('ID').showModal() method */}
+                    <button
+                        className="hidden btn btn-md btn-primary lg:block"
+                        onClick={() =>
+                            document.getElementById("addMaterial").showModal()
+                        }
+                    >
+                        Add new material
+                    </button>
+                    <button
+                        className="block rounded-full btn btn-md btn-primary lg:hidden"
+                        onClick={() =>
+                            document.getElementById("addMaterial").showModal()
+                        }
+                    >
+                        +
+                    </button>
+                </div>
                 <dialog id="addMaterial" className="modal">
                     <div className="modal-box">
                         <h3 className="text-lg font-bold">Add new material</h3>

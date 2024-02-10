@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
     useGetAllSubjectsQuery,
     useSearchSubjectByNameQuery,
@@ -20,7 +20,6 @@ const MainSubjects = () => {
         data: searchData,
     } = useSearchSubjectByNameQuery(search);
 
-    console.log(data);
     if (isLoading)
         return (
             <div className="flex items-center justify-center h-screen">
@@ -34,10 +33,16 @@ const MainSubjects = () => {
 
     return (
         <>
+            <div className="text-sm breadcrumbs">
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li>Subjects</li>
+                </ul>
+            </div>
             <div className="flex flex-col items-center justify-between gap-5 pt-4 pb-10 md:flex-row">
-                <p className="text-xl font-bold text-center">
-                    Select the subject you want
-                </p>
+                <p className="text-2xl font-bold text-center">Subjects</p>
                 <input
                     type="text"
                     placeholder="Search on subjects..."
