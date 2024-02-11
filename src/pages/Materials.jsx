@@ -139,11 +139,13 @@ const Materials = () => {
                     <select
                         className="w-full max-w-xs select select-bordered"
                         onChange={handleOptionChange}
+                        disabled={data?.length === 0 }
                     >
                         <option value={""}>All Materials</option>
                         <option value={".pdf"}>Books</option>
                         <option value={".mp4"}>Lectures</option>
-                        <option value={".docx"}>Slides</option>
+                        <option value={".pptx"}>Slides</option>
+                        <option value={".docx"}>Documents</option>
                         <option value={".png"}>Past Exams</option>
                     </select>
                     {/* Open the modal using document.getElementById('ID').showModal() method */}

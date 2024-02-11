@@ -24,6 +24,8 @@ const MaterialReports = () => {
         },
     ] = useDeleteReportMutation();
 
+    console.log({ dataDelete, isErrorDelete, isSuccessDelete, errorDelete });
+
     if (isLoading)
         return (
             <div className="flex items-center justify-center h-screen">
@@ -41,17 +43,16 @@ const MaterialReports = () => {
         }
     };
 
-    if(isSuccessDelete){
+    if (isSuccessDelete) {
         toast.success("Report deleted successfully");
         resetDelete();
         refetch();
     }
 
-    if(isErrorDelete && errorDelete){
+    if (isErrorDelete && errorDelete) {
         toast.error(errorDelete.data);
         resetDelete();
         refetch();
-
     }
     if (isSuccess) {
         return (
@@ -83,6 +84,7 @@ const MaterialReports = () => {
                                                 })
                                             }
                                             className="btn btn-sm btn-error"
+                                            disabled={isLoadingDelete}
                                         >
                                             Delete
                                         </button>

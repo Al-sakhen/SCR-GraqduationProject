@@ -9,7 +9,6 @@ import Categories from "./pages/admin/layout/Categories";
 import Register from "./pages/Register";
 import CategoriesEdit from "./pages/admin/layout/Categories/edit";
 import Subjects from "./pages/admin/layout/Subjects";
-import CreateMaterial from "./pages/layout/materials/CreateMaterial";
 import SubjectEdit from "./pages/admin/layout/Subjects/edit";
 import DashboardHome from "./pages/admin/DashboardHome";
 import HomeSubjects from "./pages/Subjects";
@@ -55,10 +54,7 @@ function App() {
                         path="category/:id/subjects"
                         element={<HomeSubjects />}
                     />
-                    {/* <Route
-                        path="materials/create"
-                        element={<CreateMaterial />}
-                    /> */}
+
                     <Route
                         path="subject/:id/materials"
                         element={<Materials />}

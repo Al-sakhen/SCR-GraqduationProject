@@ -1,14 +1,21 @@
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, Link } from "react-router-dom";
 import { useGetSubjectsByCategoryIdQuery } from "../services/aspiAPI";
+import { useGetCategoryByIdQuery } from "../services/aspiAPI";
 
 const HomeSubjects = () => {
     const { id } = useParams();
 
     const { isError, isFetching, isLoading, isSuccess, data, refetch } =
         useGetSubjectsByCategoryIdQuery(id);
-    const goBack = () => {
-        window.history.back();
-    };
+
+    const {
+        isError: isCategoryError,
+        isLoading: isCategoryLoading,
+        isSuccess: isCategorySuccess,
+        data: categoryData,
+    } = useGetCategoryByIdQuery(id);
+
+    console.log({ categoryData });
     if (isLoading)
         return (
             <div className="flex items-center justify-center h-screen">
@@ -34,14 +41,20 @@ const HomeSubjects = () => {
 
     return (
         <>
+            {isCategorySuccess && (
+                <div className="text-sm breadcrumbs">
+                    <ul>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/categories">{categoryData.catName}</Link>
+                        </li>
+                        <li>Subjects</li>
+                    </ul>
+                </div>
+            )}
             <div className="relative pt-4 pb-10">
-                <NavLink
-                    onClick={goBack}
-                    className="absolute top-0 left-0 text-3xl font-bold text-center hover:text-cyan-900"
-                >
-                    🔙
-                </NavLink>
-
                 <p className="text-xl font-bold text-center ">
                     Select the subject you want
                 </p>

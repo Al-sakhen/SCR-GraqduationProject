@@ -20,7 +20,7 @@ const Home = () => {
                                 We welcome students to our SRC website to help
                                 you for easy reach for all the material you want
                             </h1>
-                            <NavLink to={"/login"} className="btn btn-primary">
+                            <NavLink to={"/categories"} className="btn btn-primary">
                                 Get Started
                             </NavLink>
                         </div>
