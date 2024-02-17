@@ -5,6 +5,7 @@ import {
 } from "../../../../services/aspiAPI";
 import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
+import TableRow from "./TableRow";
 
 const AdMaterials = () => {
     // ========Fetching data =========
@@ -26,7 +27,6 @@ const AdMaterials = () => {
             data: dataDelete,
         },
     ] = useDeleteMaterialMutation();
-
 
     const handleDelete = (id) => {
         deleteMaterial(id);
@@ -66,40 +66,17 @@ const AdMaterials = () => {
                                 <th>#</th>
                                 <th>Description</th>
                                 <th>File format</th>
+                                <th>Uploaded By</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {data.map((material, index) => (
-                                <tr key={index + 1}>
-                                    <th>{material.materialId}</th>
-                                    <td>{material.description}</td>
-                                    <td>{material.fileFormat}</td>
-                                    <td className="space-x-2">
-                                        <NavLink
-                                            to={`/admin/materials/${material.materialId}/reports`}
-                                            className="btn btn-sm btn-info"
-                                        >
-                                            Reports
-                                        </NavLink>
-                                        <NavLink
-                                            to={`/admin/materials/${material.materialId}/comments`}
-                                            className="btn btn-sm btn-success"
-                                        >
-                                            Comments
-                                        </NavLink>
-                                        <button
-                                            onClick={() =>
-                                                handleDelete(
-                                                    material.materialId
-                                                )
-                                            }
-                                            className="btn btn-sm btn-error"
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
+                                <TableRow
+                                    key={index + 1}
+                                    material={material}
+                                    handleDelete={handleDelete}
+                                />
                             ))}
 
                             {data.length === 0 && (

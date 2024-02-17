@@ -1,30 +1,11 @@
-import { toast } from "react-toastify";
-import {
-    useDeleteReportMutation,
-    useGetReportsByMaterialIdQuery,
-} from "../../../../services/aspiAPI";
-import { NavLink, useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useGetReportsByMaterialIdQuery } from "../../../../services/aspiAPI";
+import { useParams } from "react-router-dom";
 
 const MaterialReports = () => {
     const { id: materialId } = useParams();
     // ========Fetching data =========
     const { isError, isFetching, isLoading, isSuccess, data, refetch } =
         useGetReportsByMaterialIdQuery(materialId);
-
-    const [
-        deleteReport,
-        {
-            isLoading: isLoadingDelete,
-            isSuccess: isSuccessDelete,
-            isError: isErrorDelete,
-            error: errorDelete,
-            reset: resetDelete,
-            data: dataDelete,
-        },
-    ] = useDeleteReportMutation();
-
-    console.log({ dataDelete, isErrorDelete, isSuccessDelete, errorDelete });
 
     if (isLoading)
         return (
@@ -37,23 +18,6 @@ const MaterialReports = () => {
         return <div>Error...</div>;
     }
 
-    const handleDelete = (body) => {
-        if (window.confirm("Are you sure you want to delete this report?")) {
-            deleteReport(body);
-        }
-    };
-
-    if (isSuccessDelete) {
-        toast.success("Report deleted successfully");
-        resetDelete();
-        refetch();
-    }
-
-    if (isErrorDelete && errorDelete) {
-        toast.error(errorDelete.data);
-        resetDelete();
-        refetch();
-    }
     if (isSuccess) {
         return (
             <>
@@ -67,7 +31,6 @@ const MaterialReports = () => {
                             <tr>
                                 <th>#</th>
                                 <th>Description</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,20 +38,6 @@ const MaterialReports = () => {
                                 <tr key={index + 1}>
                                     <th>{index + 1}</th>
                                     <td>{material.description}</td>
-                                    <td>
-                                        <button
-                                            onClick={() =>
-                                                handleDelete({
-                                                    StdId: material.stdId,
-                                                    MatId: material.materialId,
-                                                })
-                                            }
-                                            className="btn btn-sm btn-error"
-                                            disabled={isLoadingDelete}
-                                        >
-                                            Delete
-                                        </button>
-                                    </td>
                                 </tr>
                             ))}
 

@@ -281,7 +281,6 @@ export const aspAPI = createApi({
 
         // ---------------------------------------------------------
         // ==================== Rate ====================
-        // /api/Rate/AddRate
         addRate: builder.mutation({
             query: (body) => ({
                 url: "Rate/AddRate",
@@ -289,10 +288,14 @@ export const aspAPI = createApi({
                 body,
             }),
         }),
-        // /api/Rate/GetAverageRatesByMaterialId
+
+
         getAverageRatesByMaterialId: builder.query({
             query: (id) => `Rate/GetAverageRatesByMaterialId?materialId=${id}`,
         }),
+
+        // ==================== End Rate ====================
+        // *********************************************************
     }),
 });
 

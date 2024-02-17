@@ -139,7 +139,6 @@ const Materials = () => {
                     <select
                         className="w-full max-w-xs select select-bordered"
                         onChange={handleOptionChange}
-                        disabled={data?.length === 0 }
                     >
                         <option value={""}>All Materials</option>
                         <option value={".pdf"}>Books</option>

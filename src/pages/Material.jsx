@@ -8,6 +8,7 @@ import {
     useGetAverageRatesByMaterialIdQuery,
     useGetCommentsByMaterialIdQuery,
     useGetMaterialByIdQuery,
+    useGetStudentInfoQuery,
 } from "../services/aspiAPI";
 import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
@@ -65,8 +66,16 @@ const Material = () => {
     const { isError, isFetching, isLoading, isSuccess, data, refetch } =
         useGetMaterialByIdQuery(MaterialId);
 
-    console.log({ data });
+    const {
+        isError: isErrorStudentInfo,
+        isFetching: isFetchingStudentInfo,
+        isLoading: isLoadingStudentInfo,
+        isSuccess: isSuccessStudentInfo,
+        data: dataStudentInfo,
+        refetch: refetchStudentInfo,
+    } = useGetStudentInfoQuery(data?.stdId);
 
+    console.log({ dataStudentInfo });
     const {
         isError: isErrorComments,
         isFetching: isFetchingComments,
@@ -345,11 +354,25 @@ const Material = () => {
                     </form>
                 </dialog>
                 <p className="text-3xl font-bold mt-11 ">{data.description}</p>
+                {isSuccessStudentInfo && (
+                    <>
+                        <p className="mt-3 bg-green-400 badge dark:text-black">
+                            <span className="px-2 font-bold">
+                                Uploaded by :{" "}
+                            </span>
+                            {dataStudentInfo.stdName}
+                        </p>
+                    </>
+                )}
+
                 {isSuccessRateAvg && dataRateAvg?.averageRate > 0 && (
-                    <p className="mt-3 bg-yellow-400 badge dark:text-black">
-                        <span className="px-2 font-bold">Rating : </span>
-                        {Math.round(dataRateAvg.averageRate)} / 5
-                    </p>
+                    <>
+                        <br />
+                        <p className="mt-3 bg-yellow-400 badge dark:text-black">
+                            <span className="px-2 font-bold">Rating : </span>
+                            {Math.round(dataRateAvg.averageRate)} / 5
+                        </p>
+                    </>
                 )}
             </div>
 
